@@ -1,6 +1,8 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import Clock from "./components/Clock";
+import TextAreaCounter from "./components/TextAreaCounter";
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
           Learn React
         </a>
       </header>
+      <Clock />
+      <TextAreaCounter defaultText="Ultra" />
     </div>
   );
 }
