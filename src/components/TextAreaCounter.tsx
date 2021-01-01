@@ -6,11 +6,9 @@ class TextAreaCounter extends React.Component<any, any> {
         this.state = {
             text: this.props.defaultText,
         }
-
-        this.onTextChange = this.onTextChange.bind(this);
     }
 
-    onTextChange(e: any) {
+    onTextChange = (e: any) => {
         this.setState({
             text: e.target.value,
         });
