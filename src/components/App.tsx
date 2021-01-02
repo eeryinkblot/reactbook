@@ -1,7 +1,7 @@
 import React from 'react';
-import './App.css';
-import Clock from "./components/Clock";
-import TextAreaCounter from "./components/TextAreaCounter";
+import '../App.css';
+import Clock from "./Clock";
+import TextAreaCounter from "./TextAreaCounter";
 
 function App() {
   return (
