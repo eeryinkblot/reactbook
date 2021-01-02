@@ -1,13 +1,13 @@
 import React from 'react';
 import '../App.css';
-import Clock from "./Clock";
-import TextAreaCounter from "./TextAreaCounter";
+import Excel from "./Excel";
+import excelData from "../excelData";
 
 function App() {
   return (
     <div className="App">
-      <Clock />
-      <TextAreaCounter defaultText="Ultra" />
+        <Excel headers={excelData[0]}
+               initialData={excelData[1]} />
     </div>
   );
 }
