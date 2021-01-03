@@ -4,6 +4,7 @@ export default class Excel extends React.Component<any, {
     data: Array<Array<string>>,
     sortBy: number | null,
     descending: boolean,
+    edit: { row: number, column: number } | null,
 }> {
     constructor(props: any) {
         super(props);
@@ -11,6 +12,7 @@ export default class Excel extends React.Component<any, {
             data: props.initialData,
             sortBy: null,
             descending: false,
+            edit: null,
         };
     }
 
@@ -31,9 +33,36 @@ export default class Excel extends React.Component<any, {
         });
     }
 
+    showEditor = (e: any) => {
+        this.setState({
+            edit: {
+                row: parseInt(e.target.dataset.row, 10),
+                column: e.target.cellIndex,
+            }
+        });
+    }
+
+    save = (e: any) => {
+        e.preventDefault();
+
+        const input = e.target.firstChild;
+        const data = this.state.data.slice();
+
+        if (this.state.edit) {
+            data[this.state.edit.row][this.state.edit.column] = input.value;
+        }
+
+        this.setState({
+            data: data,
+            edit: null,
+        });
+    }
+
     render() {
-        let headers = this.props.headers;
-        let data = this.state.data;
+        const headers = this.props.headers;
+        const data = this.state.data;
+        const edit = this.state.edit;
+
         return (
             <table>
                 <thead onClick={this.sort}>
@@ -45,11 +74,19 @@ export default class Excel extends React.Component<any, {
                     )}
                 </tr>
                 </thead>
-                <tbody>
-                {data.map((row: Array<string>, index: number) =>
-                    <tr key={index}>
-                        {row.map((cell: string, index: number) =>
-                            <td key={index}>{cell}</td>
+                <tbody onDoubleClick={this.showEditor}>
+                {data.map((row: Array<string>, rowIndex: number) =>
+                    <tr key={rowIndex}>
+                        {row.map((content: string, index: number) =>
+                            <td key={index} data-row={rowIndex}>
+                                { edit && edit.row === rowIndex && edit.column === index &&
+                                    <form onSubmit={this.save}>
+                                        <input type="text" defaultValue={content} />
+                                    </form>
+                                }
+                                { edit && (edit.row !== rowIndex || edit.column !== index) && content }
+                                { !edit && content }
+                            </td>
                         )}
                     </tr>
                 )}
