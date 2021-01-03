@@ -1,18 +1,34 @@
 import React from "react";
 
-export default class Excel extends React.Component<any, { data: Array<Array<string>> }> {
+export default class Excel extends React.Component<any, {
+    data: Array<Array<string>>,
+    sortBy: any,
+    descending: boolean
+}> {
     constructor(props: any) {
         super(props);
-        this.state = {data: props.initialData};
+        this.state = {
+            data: props.initialData,
+            sortBy: null,
+            descending: false,
+        };
     }
 
     sort = (e: any) => {
         const column = e.target.cellIndex;
         const data = Array.from(this.state.data);
+
+        const descending = this.state.sortBy === column && !this.state.descending;
         const sortedData = data.sort((a: Array<string>, b: Array<string>) => {
-            return a[column] < b[column] ? -1 : 1;
+            return descending
+                ? a[column] < b[column] ? 1 : -1
+                : a[column] > b[column] ? 1 : -1;
         });
-        this.setState({data: sortedData});
+        this.setState({
+            data: sortedData,
+            sortBy: column,
+            descending: descending,
+        });
     }
 
     render() {
