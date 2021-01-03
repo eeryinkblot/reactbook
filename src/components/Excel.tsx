@@ -39,7 +39,9 @@ export default class Excel extends React.Component<any, {
                 <thead onClick={this.sort}>
                 <tr>
                     {headers.map((title: string, idx: number) =>
-                        <th key={idx}>{title}</th>
+                        <th key={idx}>{title}{
+                            this.state.sortBy === idx && (this.state.descending && ' \u2193' || !this.state.descending && ' \u2191')
+                        }</th>
                     )}
                 </tr>
                 </thead>
