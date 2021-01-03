@@ -2,8 +2,8 @@ import React from "react";
 
 export default class Excel extends React.Component<any, {
     data: Array<Array<string>>,
-    sortBy: any,
-    descending: boolean
+    sortBy: number | null,
+    descending: boolean,
 }> {
     constructor(props: any) {
         super(props);
