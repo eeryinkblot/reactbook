@@ -9,8 +9,7 @@ export default class Excel extends React.Component<any, {
 }> {
 
     private preSearchData: any;
-    private log: any;
-    private isReplay: boolean;
+    private readonly log: any;
 
     constructor(props: any) {
         super(props);
@@ -24,7 +23,6 @@ export default class Excel extends React.Component<any, {
 
         this.preSearchData = null;
         this.log = [this.state];
-        this.isReplay = false;
     }
 
     componentDidMount() {
@@ -37,13 +35,13 @@ export default class Excel extends React.Component<any, {
 
     toggleSearch = (e_ignore: any) => {
         if (this.state.search) {
-            this.setState({
+            this.logSetState({
                 search: false,
                 data: this.preSearchData,
             });
         } else {
             this.preSearchData = this.state.data;
-            this.setState({
+            this.logSetState({
                 search: true,
             });
         }
@@ -52,14 +50,14 @@ export default class Excel extends React.Component<any, {
     search = (e: any) => {
         const needle = e.target.value.toLowerCase();
         if (!needle) {
-            this.setState({data: this.preSearchData});
+            this.logSetState({data: this.preSearchData});
         }
 
         const index = e.target.dataset.index;
         let filteredData = this.preSearchData.filter((row: any) => {
             return row[index].toLowerCase().indexOf(needle) > -1;
         });
-        this.setState({data: filteredData});
+        this.logSetState({data: filteredData});
     }
 
     sort = (e: any) => {
@@ -72,7 +70,7 @@ export default class Excel extends React.Component<any, {
                 ? a[column] < b[column] ? 1 : -1
                 : a[column] > b[column] ? 1 : -1;
         });
-        this.setState({
+        this.logSetState({
             data: sortedData,
             sortBy: column,
             descending: descending,
@@ -80,7 +78,7 @@ export default class Excel extends React.Component<any, {
     }
 
     showEditor = (e: any) => {
-        this.setState({
+        this.logSetState({
             edit: {
                 row: parseInt(e.target.dataset.row, 10),
                 column: e.target.cellIndex,
@@ -98,7 +96,7 @@ export default class Excel extends React.Component<any, {
             data[this.state.edit.row][this.state.edit.column] = input.value;
         }
 
-        this.setState({
+        this.logSetState({
             data: data,
             edit: null,
         });
@@ -112,7 +110,8 @@ export default class Excel extends React.Component<any, {
     }
 
     private renderToolbar() {
-        return <button onClick={this.toggleSearch} className="toolbar">{this.state.search ? 'Suche beenden' : 'Suchen'}</button>;
+        return <button onClick={this.toggleSearch}
+                       className="toolbar">{this.state.search ? 'Suche beenden' : 'Suchen'}</button>;
     }
 
     private renderSearch() {
@@ -170,31 +169,25 @@ export default class Excel extends React.Component<any, {
         );
     }
 
-    shouldComponentUpdate(nextProps: Readonly<any>, nextState: Readonly<{ data: Array<Array<string>>; sortBy: number | null; descending: boolean; edit: { row: number; column: number } | null; search: boolean }>, nextContext: any): boolean {
-        if (!this.isReplay) {
-            this.log.push(nextState);
-        }
-        console.log(this.log);
-        return true;
+    private logSetState(nextState: any) {
+        this.log.push(nextState);
+        this.setState(nextState);
     }
 
     private replay() {
-        const log: any = Array.from(this.log);
-        if (log.length === 0) {
+        if (this.log.length === 1) {
             console.log('Noch kein Status zur Wiedergabe');
             return;
         }
 
-        this.isReplay = true;
         let index = -1;
         let interval = setInterval(() => {
             index++;
 
-            this.setState(log[index]);
+            this.setState(this.log[index]);
 
-            if (index === log.length - 1) {
+            if (index === this.log.length - 1) {
                 clearInterval(interval);
-                this.isReplay = false;
             }
         }, 1000);
     }
