@@ -63,15 +63,23 @@ export default class Excel extends React.Component<any, {
         const data = this.state.data;
         const edit = this.state.edit;
 
+        let icon: any = null;
+        if (this.state.descending) {
+            icon = ' \u2193';
+        } else {
+            icon = ' \u2191';
+        }
+
+        const headerElements =
+            headers.map((title: string, index: number) =>
+                <th key={index}>{title}{this.state.sortBy === index && icon}</th>
+            );
+
         return (
             <table>
                 <thead onClick={this.sort}>
                 <tr>
-                    {headers.map((title: string, idx: number) =>
-                        <th key={idx}>{title}{
-                            this.state.sortBy === idx && (this.state.descending && ' \u2193' || !this.state.descending && ' \u2191')
-                        }</th>
-                    )}
+                    {headerElements}
                 </tr>
                 </thead>
                 <tbody onDoubleClick={this.showEditor}>
@@ -79,13 +87,13 @@ export default class Excel extends React.Component<any, {
                     <tr key={rowIndex}>
                         {row.map((content: string, index: number) =>
                             <td key={index} data-row={rowIndex}>
-                                { edit && edit.row === rowIndex && edit.column === index &&
-                                    <form onSubmit={this.save}>
-                                        <input type="text" defaultValue={content} />
-                                    </form>
+                                {edit && edit.row === rowIndex && edit.column === index &&
+                                <form onSubmit={this.save}>
+                                    <input type="text" defaultValue={content}/>
+                                </form>
                                 }
-                                { edit && (edit.row !== rowIndex || edit.column !== index) && content }
-                                { !edit && content }
+                                {edit && (edit.row !== rowIndex || edit.column !== index) && content}
+                                {!edit && content}
                             </td>
                         )}
                     </tr>
