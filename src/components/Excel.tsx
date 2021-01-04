@@ -5,7 +5,11 @@ export default class Excel extends React.Component<any, {
     sortBy: number | null,
     descending: boolean,
     edit: { row: number, column: number } | null,
+    search: boolean,
 }> {
+
+    private preSearchData: any;
+
     constructor(props: any) {
         super(props);
         this.state = {
@@ -13,7 +17,37 @@ export default class Excel extends React.Component<any, {
             sortBy: null,
             descending: false,
             edit: null,
+            search: false,
         };
+
+        this.preSearchData = null;
+    }
+
+    toggleSearch = (e_ignore: any) => {
+        if (this.state.search) {
+            this.setState({
+                search: false,
+                data: this.preSearchData,
+            });
+        } else {
+            this.preSearchData = this.state.data;
+            this.setState({
+                search: true,
+            });
+        }
+    }
+
+    search = (e: any) => {
+        const needle = e.target.value.toLowerCase();
+        if (!needle) {
+            this.setState({data: this.preSearchData});
+        }
+
+        const index = e.target.dataset.index;
+        let filteredData = this.preSearchData.filter((row: any) => {
+            return row[index].toLowerCase().indexOf(needle) > -1;
+        });
+        this.setState({data: filteredData});
     }
 
     sort = (e: any) => {
@@ -59,6 +93,26 @@ export default class Excel extends React.Component<any, {
     }
 
     render() {
+        return <div>
+            {this.renderToolbar()}
+            {this.renderTable()}
+        </div>;
+    }
+
+    private renderToolbar() {
+        return <button onClick={this.toggleSearch} className="toolbar">Suchen</button>;
+    }
+
+    private renderSearch() {
+        return (<tr onChange={this.search}>
+            {this.props.headers.map((_ignore: any, index: number) =>
+                <td key={index}>
+                    <input type="text" data-index={index}/>
+                </td>)}
+        </tr>);
+    }
+
+    private renderTable() {
         const headers = this.props.headers;
         const data = this.state.data;
         const edit = this.state.edit;
@@ -83,6 +137,7 @@ export default class Excel extends React.Component<any, {
                 </tr>
                 </thead>
                 <tbody onDoubleClick={this.showEditor}>
+                {this.state.search && this.renderSearch()}
                 {data.map((row: Array<string>, rowIndex: number) =>
                     <tr key={rowIndex}>
                         {row.map((content: string, index: number) =>
@@ -102,4 +157,5 @@ export default class Excel extends React.Component<any, {
             </table>
         );
     }
+
 }
