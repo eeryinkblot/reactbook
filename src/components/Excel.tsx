@@ -100,7 +100,7 @@ export default class Excel extends React.Component<any, {
     }
 
     private renderToolbar() {
-        return <button onClick={this.toggleSearch} className="toolbar">Suchen</button>;
+        return <button onClick={this.toggleSearch} className="toolbar">{this.state.search ? 'Suche beenden' : 'Suchen'}</button>;
     }
 
     private renderSearch() {
