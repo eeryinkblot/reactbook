@@ -46,7 +46,7 @@ export default class Excel extends React.Component<any, {
         e.preventDefault();
 
         const input = e.target.firstChild;
-        const data = this.state.data.slice();
+        const data = Array.from(this.state.data);
 
         if (this.state.edit) {
             data[this.state.edit.row][this.state.edit.column] = input.value;
