@@ -10,6 +10,7 @@ export default class Excel extends React.Component<any, {
 
     private preSearchData: any;
     private readonly log: any;
+    private logPointer: number;
 
     constructor(props: any) {
         super(props);
@@ -23,12 +24,23 @@ export default class Excel extends React.Component<any, {
 
         this.preSearchData = null;
         this.log = [this.state];
+        this.logPointer = 0;
     }
 
     componentDidMount() {
-        document.onkeydown = (e: any) => {
-            if (e.altKey && e.shiftKey && e.keyCode === 82) {
+        document.onkeydown = (event: any) => {
+            const alt = event.altKey;
+            const shift = event.shiftKey;
+
+            const R = event.keyCode === 82;
+            const Z = event.keyCode === 90;
+
+            if (alt && shift && R) {
                 this.replay();
+            } else if (alt && shift && Z) {
+                this.redo();
+            } else if (alt && Z) {
+                this.undo();
             }
         };
     }
@@ -171,6 +183,7 @@ export default class Excel extends React.Component<any, {
 
     private logSetState(nextState: any) {
         this.log.push(nextState);
+        this.logPointer += 1;
         this.setState(nextState);
     }
 
@@ -190,6 +203,20 @@ export default class Excel extends React.Component<any, {
                 clearInterval(interval);
             }
         }, 1000);
+    }
+
+    private undo() {
+        if (this.logPointer > 0) {
+            this.logPointer -= 1;
+            this.setState(this.log[this.logPointer]);
+        }
+    }
+
+    private redo() {
+        if (this.logPointer < (this.log.length - 1)) {
+            this.logPointer += 1;
+            this.setState(this.log[this.logPointer]);
+        }
     }
 
 }
