@@ -9,6 +9,8 @@ export default class Excel extends React.Component<any, {
 }> {
 
     private preSearchData: any;
+    private log: any;
+    private isReplay: boolean;
 
     constructor(props: any) {
         super(props);
@@ -21,6 +23,16 @@ export default class Excel extends React.Component<any, {
         };
 
         this.preSearchData = null;
+        this.log = [this.state];
+        this.isReplay = false;
+    }
+
+    componentDidMount() {
+        document.onkeydown = (e: any) => {
+            if (e.altKey && e.shiftKey && e.keyCode === 82) {
+                this.replay();
+            }
+        };
     }
 
     toggleSearch = (e_ignore: any) => {
@@ -156,6 +168,35 @@ export default class Excel extends React.Component<any, {
                 </tbody>
             </table>
         );
+    }
+
+    shouldComponentUpdate(nextProps: Readonly<any>, nextState: Readonly<{ data: Array<Array<string>>; sortBy: number | null; descending: boolean; edit: { row: number; column: number } | null; search: boolean }>, nextContext: any): boolean {
+        if (!this.isReplay) {
+            this.log.push(nextState);
+        }
+        console.log(this.log);
+        return true;
+    }
+
+    private replay() {
+        const log: any = Array.from(this.log);
+        if (log.length === 0) {
+            console.log('Noch kein Status zur Wiedergabe');
+            return;
+        }
+
+        this.isReplay = true;
+        let index = -1;
+        let interval = setInterval(() => {
+            index++;
+
+            this.setState(log[index]);
+
+            if (index === log.length - 1) {
+                clearInterval(interval);
+                this.isReplay = false;
+            }
+        }, 1000);
     }
 
 }
