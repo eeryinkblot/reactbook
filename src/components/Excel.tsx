@@ -114,6 +114,28 @@ export default class Excel extends React.Component<any, {
         });
     }
 
+    download = (format: string, event: any) => {
+        const contents = format === 'json'
+            ? JSON.stringify(this.state.data)
+            : this.createCSV();
+
+        const URL = window.URL || window.webkitURL;
+        const blob = new Blob([contents], {type: 'text/' + format});
+        event.target.href = URL.createObjectURL(blob);
+        event.target.download = 'data.' + format;
+    }
+
+    private createCSV() {
+        return this.state.data.reduce((result: any, row: any) => {
+            return result + row.reduce((rowResult: any, cell: any, index: any) => {
+                    const content = cell.replace(/"/g, '""');
+                    const delimiter = index < row.length - 1 ? ';' : '';
+                    return `${rowResult}"${content}"${delimiter}`;
+                }, '')
+                + "\n";
+        }, '');
+    }
+
     render() {
         return <div>
             {this.renderToolbar()}
@@ -122,8 +144,11 @@ export default class Excel extends React.Component<any, {
     }
 
     private renderToolbar() {
-        return <button onClick={this.toggleSearch}
-                       className="toolbar">{this.state.search ? 'Suche beenden' : 'Suchen'}</button>;
+        return <div className="toolbar">
+            <button onClick={this.toggleSearch}>{this.state.search ? 'Suche beenden' : 'Suchen'}</button>
+            <a onClick={this.download.bind(this, 'json')} href="data.json">Export als JSON</a>
+            <a onClick={this.download.bind(this, 'csv')} href="data.csv">Export als CSV</a>
+        </div>;
     }
 
     private renderSearch() {
