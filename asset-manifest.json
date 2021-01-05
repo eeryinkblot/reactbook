@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/reactbook/static/css/main.042102bb.chunk.css",
-    "main.js": "/reactbook/static/js/main.36b63021.chunk.js",
-    "main.js.map": "/reactbook/static/js/main.36b63021.chunk.js.map",
+    "main.css": "/reactbook/static/css/main.25e11249.chunk.css",
+    "main.js": "/reactbook/static/js/main.4fbbd3f7.chunk.js",
+    "main.js.map": "/reactbook/static/js/main.4fbbd3f7.chunk.js.map",
     "runtime-main.js": "/reactbook/static/js/runtime-main.c4085d07.js",
     "runtime-main.js.map": "/reactbook/static/js/runtime-main.c4085d07.js.map",
     "static/js/2.3141977c.chunk.js": "/reactbook/static/js/2.3141977c.chunk.js",
@@ -10,13 +10,13 @@
     "static/js/3.a4dfd18a.chunk.js": "/reactbook/static/js/3.a4dfd18a.chunk.js",
     "static/js/3.a4dfd18a.chunk.js.map": "/reactbook/static/js/3.a4dfd18a.chunk.js.map",
     "index.html": "/reactbook/index.html",
-    "static/css/main.042102bb.chunk.css.map": "/reactbook/static/css/main.042102bb.chunk.css.map",
+    "static/css/main.25e11249.chunk.css.map": "/reactbook/static/css/main.25e11249.chunk.css.map",
     "static/js/2.3141977c.chunk.js.LICENSE.txt": "/reactbook/static/js/2.3141977c.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.c4085d07.js",
     "static/js/2.3141977c.chunk.js",
-    "static/css/main.042102bb.chunk.css",
-    "static/js/main.36b63021.chunk.js"
+    "static/css/main.25e11249.chunk.css",
+    "static/js/main.4fbbd3f7.chunk.js"
   ]
 }
